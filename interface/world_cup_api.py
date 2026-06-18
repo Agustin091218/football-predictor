@@ -6,7 +6,9 @@ Results survive server restarts.
 
 from __future__ import annotations
 
+import json
 import logging
+import os
 from datetime import datetime
 from typing import Any
 
@@ -18,6 +20,23 @@ from football_predictor.infrastructure.container import container
 router = APIRouter(prefix="/world-cup", tags=["World Cup 2026"])
 logger = logging.getLogger(__name__)
 
+_FIXTURES_PATH = os.getenv(
+    "WORLD_CUP_FIXTURES_PATH",
+    os.path.join(os.path.dirname(__file__), "..", "data", "world_cup_fixtures.json"),
+)
+
+
+def _load_fixtures() -> list[dict[str, str]]:
+    try:
+        with open(_FIXTURES_PATH) as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        logger.warning("World Cup fixtures not found at %s", _FIXTURES_PATH)
+        return []
+
+
+UPCOMING_WORLD_CUP = _load_fixtures()
+
 
 class ResultBody(BaseModel):
     match_id: str | None = None
@@ -28,16 +47,6 @@ class ResultBody(BaseModel):
     group: str
     match_date: str
     entered_by: str = "user"
-
-
-UPCOMING_WORLD_CUP: list[dict[str, str]] = [
-    {"home": "England", "away": "Croatia", "group": "L", "date": "2026-06-17"},
-    {"home": "Argentina", "away": "Algeria", "group": "J", "date": "2026-06-17"},
-    {"home": "France", "away": "Senegal", "group": "I", "date": "2026-06-17"},
-    {"home": "Portugal", "away": "DR Congo", "group": "K", "date": "2026-06-17"},
-    {"home": "Belgium", "away": "Egypt", "group": "G", "date": "2026-06-16"},
-    {"home": "Spain", "away": "Cape Verde", "group": "H", "date": "2026-06-16"},
-]
 
 
 @router.get("/calibration")

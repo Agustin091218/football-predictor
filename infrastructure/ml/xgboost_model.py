@@ -217,7 +217,7 @@ class XGBoostPredictor:
         if self._feature_names is None:
             return {}
         scores = self._model.feature_importances_  # type: ignore[union-attr]
-        return dict(zip(self._feature_names, scores))
+        return dict(zip(self._feature_names, scores, strict=False))
 
     # ------------------------------------------------------------------
     # Persistence

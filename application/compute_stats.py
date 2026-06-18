@@ -66,7 +66,7 @@ class ComputeStatsUseCase:
             result = match.score.result
 
             # Ensure both teams are registered
-            for team, is_home in [(match.home_team, True), (match.away_team, False)]:
+            for team, _is_home in [(match.home_team, True), (match.away_team, False)]:
                 if team.id not in team_data:
                     team_data[team.id] = {
                         "team": team,
@@ -120,7 +120,7 @@ class ComputeStatsUseCase:
         reference_league = matches[0].league
 
         # Build and persist TeamStats for each team
-        for team_id, td in team_data.items():
+        for _team_id, td in team_data.items():
             stats = TeamStats(
                 team=td["team"],
                 league=League(

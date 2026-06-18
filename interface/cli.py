@@ -228,7 +228,7 @@ def set_weights(
         typer.echo(f"✅ Pesos actualizados: Poisson={poisson:.0%} | XGBoost={xgboost:.0%}")
     except ValueError as exc:
         typer.echo(f"❌ {exc}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from exc
 
 
 @app.command()
@@ -285,7 +285,7 @@ def backtest(
 
     except ValueError as exc:
         typer.echo(f"⚠️  {exc}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from exc
 
 
 @app.command()
@@ -375,7 +375,7 @@ def wc_add_result(
         hg, ag = map(int, score.split("-"))
     except ValueError:
         typer.echo("❌ Formato de score inválido. Usar '3-0'.")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     calibrator = ProbabilityCalibrator()
     cal_uc = WorldCupCalibrationUseCase(

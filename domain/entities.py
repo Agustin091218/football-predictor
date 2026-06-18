@@ -10,6 +10,10 @@ import math
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from football_predictor.domain.services import MonteCarloResult
 
 # ---------------------------------------------------------------------------
 # Enums

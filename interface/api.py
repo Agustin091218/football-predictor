@@ -333,10 +333,10 @@ async def create_prediction(match_id: str):
         prediction = container.predict_uc.execute(match_id)
         return _prediction_to_response(prediction)
     except MatchNotFoundError:
-        raise HTTPException(404, f"Partido {match_id} no encontrado")
+        raise HTTPException(404, f"Partido {match_id} no encontrado") from None
     except Exception:
         logger.exception("Error generating prediction for %s", match_id)
-        raise HTTPException(500, "Error interno generando predicción")
+        raise HTTPException(500, "Error interno generando predicción") from None
 
 
 @app.get("/predictions/{match_id}", response_model=PredictionResponse)
@@ -409,10 +409,10 @@ async def backtest_league(
         result = backtest_uc.execute(league_id, season, train_until_matchday)
         return result.as_dict()
     except ValueError as exc:
-        raise HTTPException(400, str(exc))
+        raise HTTPException(400, str(exc)) from exc
     except Exception as exc:
         logging.getLogger(__name__).error("Backtest error: %s", exc)
-        raise HTTPException(500, "Error ejecutando backtest")
+        raise HTTPException(500, "Error ejecutando backtest") from exc
 
 
 @app.post("/predict/custom")
@@ -423,15 +423,15 @@ async def predict_custom(home: str, away: str):
     from football_predictor.domain.entities import CompetitionType, League, Match, MatchStatus, Team
 
     elo = {}
+    elo_path = os.getenv("ELO_RATINGS_PATH", "archive/eloratings.csv")
     try:
-        elo_path = os.getenv("ELO_RATINGS_PATH", "archive/eloratings.csv")
-with open(elo_path) as f:
+        with open(elo_path) as f:
             for row in csv.DictReader(f):
                 try:
                     r = float(row.get("rating") or 0)
                     if r > 0:
                         elo[row["team"]] = r
-                except:
+                except (ValueError, KeyError):
                     continue
     except FileNotFoundError:
         pass

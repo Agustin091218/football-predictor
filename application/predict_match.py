@@ -431,7 +431,7 @@ class PredictMatchUseCase:
 For each team, find: opponent, score, date, competition.
 Then compute:
 - Average goals scored per match by {match.home_team.name} in last 10 matches
-- Average goals conceded per match by {match.home_team.name} in last 10 matches  
+- Average goals conceded per match by {match.home_team.name} in last 10 matches
 - Average goals scored per match by {match.away_team.name} in last 10 matches
 - Average goals conceded per match by {match.away_team.name} in last 10 matches
 
@@ -453,9 +453,7 @@ Return ONLY this JSON (no markdown):
 
             data = json.loads(text)
             home_scored = float(data.get("home_avg_scored", 0))
-            home_conceded = float(data.get("home_avg_conceded", 0))
             away_scored = float(data.get("away_avg_scored", 0))
-            away_conceded = float(data.get("away_avg_conceded", 0))
             home_matches = data.get("home_matches", [])
             away_matches = data.get("away_matches", [])
 

@@ -618,7 +618,7 @@ class MonteCarloSimulator:
 
         # Goals distribution
         goals_dist: dict[int, int] = {}
-        for gh, ga in zip(home_goals_list, away_goals_list):
+        for gh, ga in zip(home_goals_list, away_goals_list, strict=False):
             t = gh + ga
             goals_dist[t] = goals_dist.get(t, 0) + 1
         goals_distribution = {k: round(v / n, 4) for k, v in sorted(goals_dist.items())}
