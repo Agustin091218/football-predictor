@@ -8,7 +8,7 @@ Predicts 1X2 probabilities, expected goals, exact score distributions, and betti
 
 ```bash
 # 1. Clone
-git clone <repo-url> && cd football_predictor
+git clone https://github.com/Agustin091218/football-predictor.git && cd football-predictor
 
 # 2. Install
 python -m venv .venv && source .venv/bin/activate
