@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    container_name: football-predictor
+    ports:
+      - "8000:8000"
+    environment:
+      - FOOTBALL_DATA_TOKEN=${FOOTBALL_DATA_TOKEN:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - ENABLE_SCHEDULER=${ENABLE_SCHEDULER:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - POISSON_WEIGHT=${POISSON_WEIGHT:-0.5}
+      - XGBOOST_WEIGHT=${XGBOOST_WEIGHT:-0.5}
+      - N_SIMULATIONS=${N_SIMULATIONS:-10000}
+      - API_KEY=${API_KEY:-}
+    volumes:
+      - football_data:/app/data
+      - football_models:/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  football_data:
+  football_models:
